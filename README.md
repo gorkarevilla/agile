@@ -1,2 +1,2 @@
 # AgileIdeas
-Application to share and sell you ideas
+Application to share and sell you ideas 

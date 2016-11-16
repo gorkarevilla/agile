@@ -6,7 +6,7 @@ from .models import Comment
 
 
 class CommentForm(forms.ModelForm):
-	class Meta:
-		model = Comment
-		fields = ('comment','idea_id')
-		widgets = {'idea_id': forms.HiddenInput()}
+    class Meta:
+        model = Comment
+        fields = ('comment', 'idea_id')
+        widgets = {'idea_id': forms.HiddenInput()}

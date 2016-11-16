@@ -37,7 +37,7 @@ def submit_comment(request):
         comment.save()
     
     else:
-        return render_to_response('comments.html', {'form': CommentForm,
+        return render_to_response('ideas/comments.html', {'comment_form': CommentForm,
                 'allow_comments':True,
             }, context_instance=RequestContext(request))
          messages.error(request, "You don't have commented")

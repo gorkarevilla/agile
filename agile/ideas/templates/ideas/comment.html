@@ -7,7 +7,7 @@
 <p>Please, fill the form to comment</p>
 <form action="./comment" method="post">
     <div class="form-group">
-    {{ comment_form|crispy }}
+    {{ form|crispy }}
     {% csrf_token %}
     </div>
     <button class="btn btn-primary " type="submit">Comment</button>

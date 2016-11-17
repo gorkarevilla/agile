@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h1>Create a new user account</h1>
+<p> Please, fill out all the fields </p>
+<form action="./signup" method="post">
+	<div class= "form-group">
+	{{ user_form|crispy }}
+	{% csrf_token %}
+	</div>
+    <button class="btn btn-primary " type="submit">Sign up</button>
+</form>
+{% endblock %}

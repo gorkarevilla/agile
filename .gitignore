@@ -87,3 +87,11 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# SQLite DDBB
+db.sqlite3
+
+# Pydev files
+.project
+.pydevproject
+

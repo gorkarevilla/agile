@@ -1,16 +1,17 @@
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.views.decorators.http import require_http_methods
+
+from ideas.forms import IdeaForm
+from models import Idea
 
 from .forms import LoginForm, UserRegistrationForm
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.views.decorators.http import require_http_methods
-from django.core.exceptions import ObjectDoesNotExist
-# Create your views here.
+from django.template.defaultfilters import title
 
+
+# Create your views here.
 @require_http_methods(["GET"])
 def index(request):
 	return render (request, 'ideas/index.html')
@@ -52,3 +53,33 @@ def user_signup(request):
 	else: 
 		user_form = UserRegistrationForm()
 	return render(request,'ideas/signup.html', {'user_form':user_form})
+
+def add_idea (request):
+	if request.method == 'GET':
+		form = IdeaForm()
+		return render (request, 'ideas/addIdea.html', {'form':form})
+	if request.method == 'POST':
+		idea_form = IdeaForm(request.POST)
+		
+		if idea_form.is_valid():
+			title = idea_form.cleaned_data['idea_title']
+			idea = idea_form.cleaned_data['idea_text']
+			if Idea.objects.filter(idea_title=title).count() == 0:
+				idea = idea_form.save(commit=False)
+				idea.idea_title = title
+				idea.idea_text = idea
+				idea.creator = request.user
+				idea.save()
+				messages.add_message(request, messages.SUCCESS, 'You have sucessfully created an idea!')
+	
+				return HttpResponseRedirect('/ideas/')
+			else:
+				messages.add_message(request, messages.ERROR, 'Idea with same title already created!')
+				return HttpResponseRedirect('/ideas/')
+		else:
+			messages.add_message(request, messages.ERROR, 'ERROR EN EL FORULARIO!')
+			return HttpResponseRedirect('/ideas/')
+		
+	else:
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+		

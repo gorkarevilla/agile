@@ -2,9 +2,7 @@
 
 from django import forms 
 from django.contrib.auth.models import User
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Div, HTML, Field, Submit
-from crispy_forms.bootstrap import InlineCheckboxes, FormActions, StrictButton
+from ideas.models import Idea
 
 class LoginForm(forms.Form): 
 	username = forms.CharField(label='User')
@@ -25,3 +23,8 @@ class UserRegistrationForm(forms.ModelForm):
 		if cd['password'] != cd['password_2']: 
 			raise forms.ValidationError('Passwords do not match')
 		return cd['password_2']
+
+class IdeaForm(forms.ModelForm):
+	class Meta:
+		model = Idea
+		fields = ('idea_title', 'idea_text')

@@ -10,3 +10,14 @@ class Idea(models.Model):
     idea_text = models.CharField(max_length=500)
     pub_date = models.DateTimeField('date published')
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+# Comment Ideas Model
+class Comment(models.Model):
+    idea_id = models.ForeignKey('Ideas',
+                                db_column='idea_id',
+                                blank=False,
+                                null=False,
+                                related_name='comments')
+    user_name = models.CharField(max_length=80)
+    comment = models.TextField()

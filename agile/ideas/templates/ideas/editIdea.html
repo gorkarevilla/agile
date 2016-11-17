@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h1>Edit my idea</h1>
+<p> Change the parts of the text you want to edit </p>
+<form action="./admin" method="post"> <!--how can i link that?? and what does this action mean?-->
+   <div class= "form-group">
+   {{ user_form|crispy }}
+   {% csrf_token %}
+   </div>
+    <button class="btn btn-primary " type="submit">Save changings</button>
+</form>
+{% endblock %}

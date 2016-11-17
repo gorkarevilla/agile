@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .forms import LoginForm, UserRegistrationForm
+from .forms import LoginForm, UserRegistrationForm, EditIdeaForm
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.contrib import messages
@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_http_methods
 from django.core.exceptions import ObjectDoesNotExist
+from .models import Idea
+
 # Create your views here.
 
 @require_http_methods(["GET"])
@@ -52,3 +54,38 @@ def user_signup(request):
 	else: 
 		user_form = UserRegistrationForm()
 	return render(request,'ideas/signup.html', {'user_form':user_form})
+
+@login_required()
+def edit_idea(request):
+   id=request.GET.get('id', '')
+   user = request.user #TODO: check if user is allowed
+   myIdea = Idea.objects.get(id=id)
+
+   if request.method == 'POST':  # If the form has been submitted...
+	idea_form = EditIdeaForm(request.POST)  # A form bound to the POST data
+	if idea_form.is_valid():  # All validation rules pass
+
+		# Process the data in form.cleaned_data
+		form = idea_form.cleaned_data
+		form.save()
+
+		# myIdea.idea_title = cd.title
+		# myIdea.idea_text = cd.text
+
+		#myIdea.save()
+
+		return HttpResponseRedirect('/thanks/')  # Redirect after POST
+	else:
+		form = EditIdeaForm(myIdea)
+		print(form)
+
+	return render(request, 'ideas/admin.html', {'form': form})
+
+
+
+
+
+
+
+
+# form = EditIdeaForm(request.POST or None, initial={'idea_title':instance.idea_title, 'idea_text':instance.idea_text})

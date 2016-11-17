@@ -25,3 +25,8 @@ class UserRegistrationForm(forms.ModelForm):
 		if cd['password'] != cd['password_2']: 
 			raise forms.ValidationError('Passwords do not match')
 		return cd['password_2']
+
+
+class EditIdeaForm(forms.ModelForm):
+   idea_title = forms.CharField(label='Title')
+   idea_text = forms.CharField(label='Text')

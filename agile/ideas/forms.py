@@ -27,6 +27,6 @@ class UserRegistrationForm(forms.ModelForm):
 		return cd['password_2']
 
 
-class EditIdeaForm(forms.ModelForm):
+class EditIdeaForm(forms.Form):
    idea_title = forms.CharField(label='Title')
    idea_text = forms.CharField(label='Text')

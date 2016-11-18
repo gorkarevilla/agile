@@ -57,29 +57,26 @@ def user_signup(request):
 
 @login_required()
 def edit_idea(request):
-   id=request.GET.get('id', '')
-   user = request.user #TODO: check if user is allowed
-   myIdea = Idea.objects.get(id=id)
-
-   if request.method == 'POST':  # If the form has been submitted...
-	idea_form = EditIdeaForm(request.POST)  # A form bound to the POST data
-	if idea_form.is_valid():  # All validation rules pass
-
-		# Process the data in form.cleaned_data
-		form = idea_form.cleaned_data
-		form.save()
+	got_id=request.GET.get('id', '')
+	user = request.user #TODO: check if user is allowed
+	myIdea = Idea.objects.get(id=got_id)
+	if request.method == 'POST':
+		idea_form = EditIdeaForm(instance=myIdea)
+		#idea_form = EditIdeaForm(request.POST)
+		if idea_form.is_valid():
+			form = idea_form.cleaned_data
+			form.save()
 
 		# myIdea.idea_title = cd.title
 		# myIdea.idea_text = cd.text
 
 		#myIdea.save()
-
 		return HttpResponseRedirect('/thanks/')  # Redirect after POST
 	else:
 		form = EditIdeaForm(myIdea)
 		print(form)
 
-	return render(request, 'ideas/admin.html', {'form': form})
+	return render(request, 'ideas/editIdea.html', {'form': form})
 
 
 

@@ -11,7 +11,6 @@ class Idea(models.Model):
     pub_date = models.DateTimeField(auto_now_add=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
 
-
 # Comment Ideas Model
 class Comment(models.Model):
     idea_id = models.ForeignKey(Idea, on_delete=models.CASCADE)

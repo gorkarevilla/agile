@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^signup', views.user_signup, name='signup'),
     url(r'^comment', views.submit_comment, name='comment'),
     url(r'^addIdea', views.add_idea, name='addIdea'),
+    url(r'^editIdea', views.edit_idea, name='editIdea'),
 ]

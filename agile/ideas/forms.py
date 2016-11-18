@@ -38,3 +38,8 @@ class IdeaForm(forms.ModelForm):
 	class Meta:
 		model = Idea
 		fields = ('idea_title', 'idea_text')
+
+class EditIdeaForm(forms.Form):
+	idea_title = forms.CharField(label='Title')
+	idea_text = forms.CharField(label='Text')
+

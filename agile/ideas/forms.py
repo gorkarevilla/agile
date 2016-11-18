@@ -2,10 +2,11 @@
 
 from django import forms 
 from django.contrib.auth.models import User
+
+from ideas.models import Idea
+
 from .models import Comment
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Div, HTML, Field, Submit
-from crispy_forms.bootstrap import InlineCheckboxes, FormActions, StrictButton
+
 
 class LoginForm(forms.Form): 
 	username = forms.CharField(label='User')
@@ -27,10 +28,13 @@ class UserRegistrationForm(forms.ModelForm):
 			raise forms.ValidationError('Passwords do not match')
 		return cd['password_2']
 
-# Comment Ideas Form
-
 class CommentForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = ('comment', 'idea_id')
-        widgets = {'idea_id': forms.HiddenInput()}
+	class Meta:
+		model = Comment
+		fields = ('comment', 'idea_id')
+		widgets = {'idea_id': forms.HiddenInput()}
+		
+class IdeaForm(forms.ModelForm):
+	class Meta:
+		model = Idea
+		fields = ('idea_title', 'idea_text')

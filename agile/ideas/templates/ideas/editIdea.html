@@ -2,17 +2,15 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<h1>Edit my idea</h1>
-<p> Change the parts of the text you want to edit </p>
-<form action="./editIdea" method="post"> <!--how can i link that?? and what does this action mean?-->
-   <div class= "form-group">
-<form action="/edit-text/" method="post">
+<div class="container">
+<h1>Edit your idea</h1>
+<p>Please fill in the gaps</p>
+<form action="./editIdea" method="post">
+    <div class="form-group">
+    {{form|crispy }}
     {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit" />
+    </div>
+    <button class="btn btn-primary " type="submit">Send</button>
 </form>
-   </div>
-    <button class="btn btn-primary " type="submit">Save changings</button>
-</form>
-
+</div>
 {% endblock %}

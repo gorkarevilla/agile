@@ -17,6 +17,15 @@ from .models import Idea
 def index(request):
 	return render (request, 'ideas/index.html')
 
+@require_http_methods(["GET"])
+def main(request):
+	return render (request, 'ideas/main.html')
+
+def show_idea(request): 
+	id= request.GET.get('id','')
+	idea = Idea.objects.get(pk=id)
+	return render(request, 'ideas/detail.html', {'idea':idea})
+
 def user_login(request):
 	if request.method == 'GET': 
 		form = LoginForm()
@@ -41,6 +50,7 @@ def user_login(request):
 	else: 
 		return HttpResponse("I'm lost")
 	
+@login_required()
 def submit_comment (request):
 	if request.method == 'POST':
 			comment_form = CommentForm(request.POST)
@@ -102,26 +112,32 @@ def add_idea (request):
 
 @login_required()
 def edit_idea(request):
-	got_id=request.GET.get('id', '')
-	user = request.user #TODO: check if user is allowed
-	myIdea = Idea.objects.get(id=got_id)
-	if request.method == 'POST':
-		idea_form = EditIdeaForm(instance=myIdea)
-		#idea_form = EditIdeaForm(request.POST)
-		if idea_form.is_valid():
-			form = idea_form.cleaned_data
-			form.save()
+	if request.method == 'GET':
+		id=request.GET.get('id', '')
+		my_idea = Idea.objects.get(pk=id)
+		user = request.user
+		if (my_idea.creator == user):
+			form = EditIdeaForm(initial={'idea_title':my_idea.idea_title, 'idea_text':my_idea.idea_text})
+			return render(request, 'ideas/editIdea.html', {'form':form})
+		else: 
+			messages.add_message(request, messages.ERROR, 'You can only modify your idea')
+			return HttpResponseRedirect('/ideas/')
+	elif request.method == 'POST':
+		form = EditIdeaForm(request.POST)
+		if form.is_valid(): 
+			cd = form.cleaned_data
+			old_idea = Idea.objects.filter(idea_title=cd['idea_title'])
+			if (old_idea is not None) and (len(old_idea) > 0): 
+				old_idea.update(idea_title=cd['idea_title'])
+				messages.success(request,"Iddea modified")
+				return HttpResponseRedirect('/ideas')
+			else: 
+				messages.error(request, "There was an error while editing the idea")
+				return HttpResponseRedirect('/ideas')
+		else: 
+			messages.error(request, "Form invalid")
+			return HttpResponseRedirect('/ideas')
 
-		# myIdea.idea_title = cd.title
-		# myIdea.idea_text = cd.text
-
-		#myIdea.save()
-		return HttpResponseRedirect('/thanks/')  # Redirect after POST
-	else:
-		form = EditIdeaForm(myIdea)
-		print(form)
-
-	return render(request, 'ideas/editIdea.html', {'form': form})
 
 
 

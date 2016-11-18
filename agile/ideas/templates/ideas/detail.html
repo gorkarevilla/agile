@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>{{idea.idea_title}}</h1>
+	<p><{{idea.idea_text}}</p>
+	<div class="btn-group" role="group">
+              <a href="/ideas/addIdea">
+                <i class=" btn fa fa-plus fa-2x" aria-hidden="true"></i>
+              </a>
+    	</div>
+		<a href="/ideas/editIdea?id={{ idea.pk}}">
+                <i class=" btn fa fa-pencil-square-o fa-2x" aria-hidden="true"></i>
+              </a>
+{% endblock %}

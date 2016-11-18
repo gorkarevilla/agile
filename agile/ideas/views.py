@@ -1,10 +1,12 @@
 from django.shortcuts import render
-from .forms import LoginForm, UserRegistrationForm
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.sites.models import Site
+from .forms import LoginForm, UserRegistrationForm, EditIdeaForm
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -17,6 +19,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from comments.models import *
 from comments.forms import *
 from comments.moderator import moderator
+
+from .models import Idea
+
+# Create your views here.
+
 
 @require_http_methods(["GET"])
 def index(request):
@@ -81,3 +88,32 @@ def submit_comment(request):
          messages.error(request, "You don't have commented")
     else:
 return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+@login_required()
+def edit_idea(request):
+	got_id=request.GET.get('id', '')
+	user = request.user #TODO: check if user is allowed
+	myIdea = Idea.objects.get(id=got_id)
+	if request.method == 'POST':
+		idea_form = EditIdeaForm(instance=myIdea)
+		#idea_form = EditIdeaForm(request.POST)
+		if idea_form.is_valid():
+			form = idea_form.cleaned_data
+			form.save()
+
+		# myIdea.idea_title = cd.title
+		# myIdea.idea_text = cd.text
+
+		#myIdea.save()
+		return HttpResponseRedirect('/thanks/')  # Redirect after POST
+	else:
+		form = EditIdeaForm(myIdea)
+		print(form)
+
+	return render(request, 'ideas/editIdea.html', {'form': form})
+
+
+
+# form = EditIdeaForm(request.POST or None, initial={'idea_title':instance.idea_title, 'idea_text':instance.idea_text})
+

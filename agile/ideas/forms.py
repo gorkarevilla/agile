@@ -28,9 +28,13 @@ class UserRegistrationForm(forms.ModelForm):
 		return cd['password_2']
 
 # Comment Ideas Form
-
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('comment', 'idea_id')
         widgets = {'idea_id': forms.HiddenInput()}
+
+class EditIdeaForm(forms.Form):
+   idea_title = forms.CharField(label='Title')
+   idea_text = forms.CharField(label='Text')
+

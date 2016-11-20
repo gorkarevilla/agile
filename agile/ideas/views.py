@@ -126,7 +126,7 @@ def edit_idea(request):
 		form = EditIdeaForm(request.POST)
 		if form.is_valid(): 
 			cd = form.cleaned_data
-			old_idea = Idea.objects.filter(idea_title=cd['idea_title'])
+			old_idea = Idea.objects.get(pk=1)
 			if (old_idea is not None) and (len(old_idea) > 0): 
 				old_idea.update(idea_title=cd['idea_title'])
 				messages.success(request,"Iddea modified")

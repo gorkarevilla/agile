@@ -17,9 +17,18 @@ from .models import Idea
 def index(request):
 	return render (request, 'ideas/index.html')
 
-@require_http_methods(["GET"])
-def main(request):
-	return render (request, 'ideas/main.html')
+#@require_http_methods(["GET"])
+#def main(request):
+#	return render (request, 'ideas/main.html')
+
+def idea_list(request):
+	#ideas=Idea.objects.filter(idea_title__contains='test')
+	ideas=Idea.objects.all()
+	print("Ideas:")
+	print(len(ideas))
+	for idea in ideas:
+		print(idea.idea_title)
+	return render(request, 'ideas/main.html', {'ideas':ideas})
 
 def show_idea(request): 
 	id= request.GET.get('id','')

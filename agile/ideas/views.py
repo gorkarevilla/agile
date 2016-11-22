@@ -99,11 +99,11 @@ def add_idea (request):
 		idea_form = IdeaForm(request.POST)
 		if idea_form.is_valid():
 			title = idea_form.cleaned_data['idea_title']
-			idea = idea_form.cleaned_data['idea_text']
+			ideat = idea_form.cleaned_data['idea_text']
 			if Idea.objects.filter(idea_title=title).count() == 0:
 				idea = idea_form.save(commit=False)
 				idea.idea_title = title
-				idea.idea_text = idea
+				idea.idea_text = ideat
 				idea.creator = request.user
 				idea.save()
 				messages.add_message(request, messages.SUCCESS, 'You have sucessfully created an idea!')

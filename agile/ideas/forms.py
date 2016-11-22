@@ -44,4 +44,7 @@ class EditIdeaForm(forms.Form):
 	class Meta:
 		model = Idea
 		widgets = {'idea_id': forms.HiddenInput()}
+		
+class FilterForm(forms.Form):
+	filter_text = forms.CharField(label="Filter Text", max_length=50)
 

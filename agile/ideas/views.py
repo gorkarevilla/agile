@@ -6,7 +6,7 @@ from django.shortcuts import render, render_to_response
 from django.template.context import RequestContext
 from django.views.decorators.http import require_http_methods
 
-from ideas.forms import CommentForm, IdeaForm, EditIdeaForm
+from ideas.forms import CommentForm, IdeaForm, EditIdeaForm, FilterForm
 
 from .forms import LoginForm, UserRegistrationForm
 from .models import Idea
@@ -22,13 +22,23 @@ def index(request):
 #	return render (request, 'ideas/main.html')
 
 def idea_list(request):
-	#ideas=Idea.objects.filter(idea_title__contains='test')
-	ideas=Idea.objects.all()
-	print("Ideas:")
-	print(len(ideas))
-	for idea in ideas:
-		print(idea.idea_title)
-	return render(request, 'ideas/main.html', {'ideas':ideas})
+	if request.method == 'GET':
+		#ideas=Idea.objects.filter(idea_title__contains='test')
+		ideas=Idea.objects.all()
+		filter_form=FilterForm()
+		print("Ideas:")
+		print(len(ideas))
+		for idea in ideas:
+			print(idea.idea_title)
+		return render(request, 'ideas/main.html', {'ideas':ideas, 'filter_form':filter_form})
+	if request.method == 'POST':
+		filter_form=FilterForm(request.POST)
+		if filter_form.is_valid():
+			filter_text=filter_form.cleaned_data['filter_text']
+			ideas=Idea.objects.all().filter(idea_title__icontains=filter_text)
+			ideas1=Idea.objects.all().filter(idea_text__icontains=filter_text).exclude(idea_title__icontains=filter_text)
+			ideas=ideas | ideas1
+			return render(request, 'ideas/main.html', {'ideas':ideas, 'filter_form':filter_form})
 
 def show_idea(request): 
 	id= request.GET.get('id','')
@@ -101,11 +111,11 @@ def add_idea (request):
 		idea_form = IdeaForm(request.POST)
 		if idea_form.is_valid():
 			title = idea_form.cleaned_data['idea_title']
-			idea = idea_form.cleaned_data['idea_text']
+			ideat = idea_form.cleaned_data['idea_text']
 			if Idea.objects.filter(idea_title=title).count() == 0:
 				idea = idea_form.save(commit=False)
 				idea.idea_title = title
-				idea.idea_text = idea
+				idea.idea_text = ideat
 				idea.creator = request.user
 				idea.save()
 				messages.add_message(request, messages.SUCCESS, 'You have sucessfully created an idea!')

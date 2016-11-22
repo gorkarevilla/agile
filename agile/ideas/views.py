@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
@@ -49,6 +49,13 @@ def user_login(request):
 			return render(request, 'ideas/login.html', {'form':LoginForm})
 	else: 
 		return HttpResponse("I'm lost")
+
+@login_required
+@require_http_methods(["GET"])
+def user_logout(request): 
+	logout(request)
+	messages.add_message(request, messages.SUCCESS, 'You have successfully loged out!')
+	return HttpResponseRedirect('/ideas/')
 	
 @login_required()
 def submit_comment (request):

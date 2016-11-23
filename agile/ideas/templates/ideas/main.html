@@ -17,17 +17,15 @@
         </div>
     </div>
 
-  <div class="row">
-      <div class="col-md-3">  <label >Filter ideas by:</label> </div>
-      <div class="col-md-3"> <label><input type="checkbox" id="cbox1" value="first_checkbox"> author</label><br> </div>
-      <div class="col-md-3"><label><input type="checkbox" id="cbox2" value="second_checkbox"> keyword <input type="text"></label><br></div>
-      <div class="col-md-3"> <button class="btn btn-primary btn-sm" type="submit">apply filter</button> </div>
-  </div>
-</div>
+<form action="main" method="post" enctype="application/x-www-form-urlencoded">
+	{% csrf_token %}
+	{{ filterform }}
+	<button class="btn btn-primary btn-sm" type="submit">Search</button>
+</form>
 
 <ul class="list-group">
 	{% for idea in ideas %}
-		<li class="list-group-item">{{ idea.idea_title}} by {{ idea.creator}}</li>
+		<li class="list-group-item">{{ idea.idea_title}} by <b>{{ idea.creator}}</b></li>
 	{% endfor %}
 </ul>
 

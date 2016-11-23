@@ -45,6 +45,5 @@ class EditIdeaForm(forms.Form):
 		model = Idea
 		widgets = {'idea_id': forms.HiddenInput()}
 		
-class FilterForm(forms.Form):
-	filter_text = forms.CharField(label="Filter Text", max_length=50)
-
+class FilterIdeasForm(forms.Form):
+	keywordfilter_text = forms.CharField(label='Search by Title', max_length=50, required=False)

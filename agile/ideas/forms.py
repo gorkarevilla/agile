@@ -16,8 +16,6 @@ class UserRegistrationForm(forms.ModelForm):
 	password = forms.CharField(label='Password', widget=forms.PasswordInput)
 	password_2 = forms.CharField(label='Please repeat password', widget=forms.PasswordInput)
 
-
-
 	class Meta: 
 		model = User
 		fields = ('username','first_name','last_name','email',)
@@ -42,4 +40,10 @@ class IdeaForm(forms.ModelForm):
 class EditIdeaForm(forms.Form):
 	idea_title = forms.CharField(label='Title')
 	idea_text = forms.CharField(label='Text')
-
+	
+	class Meta:
+		model = Idea
+		widgets = {'idea_id': forms.HiddenInput()}
+		
+class FilterIdeasForm(forms.Form):
+	keywordfilter_text = forms.CharField(label='Search by Title', max_length=50, required=False)

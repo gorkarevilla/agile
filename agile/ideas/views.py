@@ -1,12 +1,12 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.template.context import RequestContext
 from django.views.decorators.http import require_http_methods
 
-from ideas.forms import CommentForm, IdeaForm, EditIdeaForm
+from ideas.forms import CommentForm, IdeaForm, EditIdeaForm, FilterIdeasForm
 
 from .forms import LoginForm, UserRegistrationForm
 from .models import Idea
@@ -17,9 +17,30 @@ from .models import Idea
 def index(request):
 	return render (request, 'ideas/index.html')
 
-@require_http_methods(["GET"])
-def main(request):
-	return render (request, 'ideas/main.html')
+#@require_http_methods(["GET"])
+#def main(request):
+#	return render (request, 'ideas/main.html')
+
+@login_required()
+def idea_list(request):
+	filterlistideas_form = FilterIdeasForm(request.POST or None)
+	ideas=Idea.objects.all()
+		
+	filter = request.POST.get('keywordfilter_text',False)
+
+	if request.method == 'GET':
+				
+		return render(request, 'ideas/main.html', {'ideas':ideas, 'filterform':filterlistideas_form})
+	
+	if request.method == 'POST':
+
+		if filterlistideas_form.is_valid():
+			if filter=='':
+				ideas=Idea.objects.all()
+			else:
+				ideas=Idea.objects.all().filter(idea_title__icontains=filter)		
+		
+		return render(request, 'ideas/main.html', {'ideas':ideas, 'filterform':filterlistideas_form})
 
 def show_idea(request): 
 	id= request.GET.get('id','')
@@ -49,8 +70,15 @@ def user_login(request):
 			return render(request, 'ideas/login.html', {'form':LoginForm})
 	else: 
 		return HttpResponse("I'm lost")
+
+@login_required
+@require_http_methods(["GET"])
+def user_logout(request): 
+	logout(request)
+	messages.add_message(request, messages.SUCCESS, 'You have successfully loged out!')
+	return HttpResponseRedirect('/ideas/')
 	
-@login_required()
+@login_required(login_url="/ideas/login")
 def submit_comment (request):
 	if request.method == 'GET':
 		id = request.GET.get('id')
@@ -100,11 +128,11 @@ def add_idea (request):
 		idea_form = IdeaForm(request.POST)
 		if idea_form.is_valid():
 			title = idea_form.cleaned_data['idea_title']
-			idea = idea_form.cleaned_data['idea_text']
+			ideat = idea_form.cleaned_data['idea_text']
 			if Idea.objects.filter(idea_title=title).count() == 0:
 				idea = idea_form.save(commit=False)
 				idea.idea_title = title
-				idea.idea_text = idea
+				idea.idea_text = ideat
 				idea.creator = request.user
 				idea.save()
 				messages.add_message(request, messages.SUCCESS, 'You have sucessfully created an idea!')
@@ -118,7 +146,7 @@ def add_idea (request):
 	else:
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-@login_required()
+@login_required(login_url="/ideas/login")
 def edit_idea(request):
 	if request.method == 'GET':
 		id=request.GET.get('id', '')
@@ -134,9 +162,11 @@ def edit_idea(request):
 		form = EditIdeaForm(request.POST)
 		if form.is_valid(): 
 			cd = form.cleaned_data
-			old_idea = Idea.objects.filter(idea_title=cd['idea_title'])
-			if (old_idea is not None) and (len(old_idea) > 0): 
-				old_idea.update(idea_title=cd['idea_title'])
+			old_idea = Idea.objects.get(pk=1)
+			if (old_idea is not None): 
+				old_idea.idea_title=cd['idea_title']
+				old_idea.idea_text=cd['idea_text']
+				old_idea.save()
 				messages.success(request,"Iddea modified")
 				return HttpResponseRedirect('/ideas')
 			else: 

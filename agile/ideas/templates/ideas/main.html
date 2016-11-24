@@ -25,7 +25,7 @@
 
 <ul class="list-group">
 	{% for idea in ideas %}
-		<li class="list-group-item">{{ idea.idea_title}} by <b>{{ idea.creator}}</b></li>
+		<li class="list-group-item">{{ idea.idea_title}} by <b>{{ idea.creator}}</b><a class="pull-right" href="/ideas/detail?id={{idea.id}}">See idea</a></li>
 	{% endfor %}
 </ul>
 

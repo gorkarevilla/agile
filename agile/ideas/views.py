@@ -7,6 +7,7 @@ from django.template.context import RequestContext
 from django.views.decorators.http import require_http_methods
 
 from ideas.forms import CommentForm, IdeaForm, EditIdeaForm, FilterIdeasForm
+from ideas.models import Comment
 
 from .forms import LoginForm, UserRegistrationForm
 from .models import Idea
@@ -42,10 +43,12 @@ def idea_list(request):
 		
 		return render(request, 'ideas/main.html', {'ideas':ideas, 'filterform':filterlistideas_form})
 
-def show_idea(request): 
-	id= request.GET.get('id','')
-	idea = Idea.objects.get(pk=id)
-	return render(request, 'ideas/detail.html', {'idea':idea})
+def show_idea(request):
+	if request.method == 'GET':
+		idea1= request.GET.get('id', '')
+		idea = Idea.objects.get(id=idea1)
+		comments =Comment.objects.filter(idea_id=idea)
+		return render(request, 'ideas/detail.html', {'idea':idea, 'comments':comments})
 
 def user_login(request):
 	if request.method == 'GET': 

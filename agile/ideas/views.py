@@ -81,9 +81,7 @@ def user_logout(request):
 @login_required(login_url="/ideas/login")
 def submit_comment (request):
 	if request.method == 'GET':
-		id = request.GET.get('id')
-		#my_comment = Idea.objects.get(pk=id)
-		#id_comment = request.idea_id			
+		id = request.GET.get('id')		
 		form = CommentForm(initial={'idea_id':id, 'user_name':request.user})	
  		return render (request, 'ideas/comment.html' , {'form':form})
 	if request.method == 'POST':		
@@ -91,19 +89,13 @@ def submit_comment (request):
 	
 		if comment_form.is_valid():
 			cd = comment_form.cleaned_data
-			valida = authenticate(comment=cd['comment'])
-		
-			if valida is not None:
-				comment = comment_form.save(commit=False)
-				comment.save()
-				messages.add_message(request, messages.SUCCESS, 'You have successfully commented!')
-				return HttpResponseRedirect('/ideas/')
-		
-			else:
-				messages.error(request, 'You don\'t have commented')
-				return HttpResponseRedirect('/ideas/')
+			comment = comment_form.save(commit=False)
+			comment.save()
+			messages.add_message(request, messages.SUCCESS, 'You have successfully commented!')
+			return HttpResponseRedirect('/ideas/')
 		else:
-			return HttpResponse('Form is not valid')
+			messages.error(request, 'Your comment could not be added, it was not valid!')
+			return HttpResponseRedirect('/ideas/')
 
 
 def user_signup(request): 

@@ -57,7 +57,7 @@ def user_logout(request):
 	messages.add_message(request, messages.SUCCESS, 'You have successfully loged out!')
 	return HttpResponseRedirect('/ideas/')
 	
-@login_required()
+@login_required(login_url="/ideas/login")
 def submit_comment (request):
 	if request.method == 'POST':
 			comment_form = CommentForm(request.POST)
@@ -117,7 +117,7 @@ def add_idea (request):
 	else:
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-@login_required()
+@login_required(login_url="/ideas/login")
 def edit_idea(request):
 	if request.method == 'GET':
 		id=request.GET.get('id', '')
@@ -134,8 +134,10 @@ def edit_idea(request):
 		if form.is_valid(): 
 			cd = form.cleaned_data
 			old_idea = Idea.objects.get(pk=1)
-			if (old_idea is not None) and (len(old_idea) > 0): 
-				old_idea.update(idea_title=cd['idea_title'])
+			if (old_idea is not None): 
+				old_idea.idea_title=cd['idea_title']
+				old_idea.idea_text=cd['idea_text']
+				old_idea.save()
 				messages.success(request,"Iddea modified")
 				return HttpResponseRedirect('/ideas')
 			else: 

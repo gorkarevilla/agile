@@ -52,23 +52,31 @@ def user_login(request):
 	
 @login_required()
 def submit_comment (request):
-	if request.method == 'POST':
-			comment_form = CommentForm(request.POST)
-			
-			if comment_form.is_valid():
-				cd = comment_form.cleaned_data
-				valida = authenticate(comment=cd['comment'], idea_id=cd['idea_id'])
-				
-				if valida is not None:
-					comment = comment_form.save(commit=False)
-					messages.add_message(request, messages.SUCCESS, 'You have successfully commented!')
-					return HttpResponseRedirect('/ideas/')
-					comment.save()
-				else:
-					return render_to_response('ideas/comments.html', {'comment_form': CommentForm,'allow_comments':True,}, context_instance=RequestContext(request))
-					messages.error(request, 'You don\'t have commented')
-	else:
-		return HttpResponseRedirect(request.META.get('HTTP_REFER', '/'))
+	if request.method == 'GET':
+		id = request.GET.get('id')
+		#my_comment = Idea.objects.get(pk=id)
+		#id_comment = request.idea_id			
+		form = CommentForm(initial={'idea_id':id, 'user_name':request.user})	
+ 		return render (request, 'ideas/comment.html' , {'form':form})
+	if request.method == 'POST':		
+		comment_form = CommentForm(request.POST)
+	
+		if comment_form.is_valid():
+			cd = comment_form.cleaned_data
+			valida = authenticate(comment=cd['comment'])
+		
+			if valida is not None:
+				comment = comment_form.save(commit=False)
+				comment.save()
+				messages.add_message(request, messages.SUCCESS, 'You have successfully commented!')
+				return HttpResponseRedirect('/ideas/')
+		
+			else:
+				messages.error(request, 'You don\'t have commented')
+				return HttpResponseRedirect('/ideas/')
+		else:
+			return HttpResponse('Form is not valid')
+
 
 def user_signup(request): 
 	if request.method == 'POST': 
@@ -142,3 +150,5 @@ def edit_idea(request):
 
 
 # form = EditIdeaForm(request.POST or None, initial={'idea_title':instance.idea_title, 'idea_text':instance.idea_text})
+
+

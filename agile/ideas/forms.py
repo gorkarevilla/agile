@@ -31,8 +31,8 @@ class UserRegistrationForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
 	class Meta:
 		model = Comment
-		fields = ('comment', 'idea_id')
-		widgets = {'idea_id': forms.HiddenInput()}
+		fields = ('comment', 'idea_id', 'user_name')
+		widgets = {'idea_id': forms.HiddenInput(), 'user_name': forms.HiddenInput()}
 		
 class IdeaForm(forms.ModelForm):
 	class Meta:

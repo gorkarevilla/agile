@@ -33,6 +33,8 @@ class CommentForm(forms.ModelForm):
 		widgets = {'idea_id': forms.HiddenInput(), 'user_name': forms.HiddenInput()}
 		
 class IdeaForm(forms.ModelForm):
+	idea_title = forms.CharField(label='Idea title', widget=forms.TextInput(attrs={'placeholder':'Length 3-50 char.'}))
+	idea_text = forms.CharField(label='Idea text', widget=forms.Textarea)
 	class Meta:
 		model = Idea
 		fields = ('idea_title', 'idea_text')

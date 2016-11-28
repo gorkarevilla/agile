@@ -85,8 +85,8 @@ def user_logout(request):
 def submit_comment (request):
 	if request.method == 'GET':
 		id = request.GET.get('id')		
-		form = CommentForm(initial={'idea_id':id, 'user_name':request.user})	
- 		return render (request, 'ideas/comment.html' , {'form':form})
+		form = CommentForm(initial={'idea_id':id, 'user_name':request.user})
+		return render (request, 'ideas/comment.html' , {'form':form})
 	if request.method == 'POST':		
 		comment_form = CommentForm(request.POST)
 	
@@ -147,7 +147,7 @@ def edit_idea(request):
 		id=request.GET.get('id', '')
 		my_idea = Idea.objects.get(pk=id)
 		user = request.user
-		if (my_idea.creator == user):
+		if (my_idea.creator == user) or (request.user.is_superuser):
 			form = EditIdeaForm(initial={'idea_title':my_idea.idea_title, 'idea_text':my_idea.idea_text})
 			return render(request, 'ideas/editIdea.html', {'form':form})
 		else: 
@@ -162,7 +162,7 @@ def edit_idea(request):
 				old_idea.idea_title=cd['idea_title']
 				old_idea.idea_text=cd['idea_text']
 				old_idea.save()
-				messages.success(request,"Iddea modified")
+				messages.success(request,"Idea modified")
 				return HttpResponseRedirect('/ideas')
 			else: 
 				messages.error(request, "There was an error while editing the idea")

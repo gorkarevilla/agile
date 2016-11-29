@@ -25,7 +25,8 @@
 
 <ul class="list-group">
 	{% for idea in ideas %}
-		<li class="list-group-item">{{ idea.idea_title}} by <b>{{ idea.creator}}</b><a class="pull-right" href="/ideas/detail?id={{idea.id}}">See idea</a></li>
+		<li class="list-group-item">{{ idea.idea_title}} by <b>{{ idea.creator}}</b>	owner: <b>{{ idea.owner}}	</b>
+		{% if idea.sell_price != None %} <b> BUYABE</b> {% endif %}<a class="pull-right" href="/ideas/detail?id={{idea.id}}">See idea</a></li>
 	{% endfor %}
 </ul>
 

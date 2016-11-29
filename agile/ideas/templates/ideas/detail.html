@@ -13,6 +13,11 @@
 	    		<i class=" btn fa fa-trash fa-2x" aria-hidden="true"></i>
 	    	</a>
 	    {% endif %}
+	    {% if idea.sell_price != None %}
+			<br><a href="/ideas/main?buy={{idea.pk}}"><label>Buy Idea</label>
+	    		<i aria-hidden="true"></i>
+	    	</a>
+	    {% endif %}
 	</div>
 	<div class="col-md-8">
 	    <p><font size="6">{{idea.idea_title}}</font></p>

@@ -29,6 +29,16 @@ def idea_list(request):
 		
 	filter = request.POST.get('keywordfilter_text',False)
 
+	if request.method == 'GET' and 'delete' in request.GET:
+		deleteid = request.GET['delete']
+		if deleteid is not None and deleteid !='':
+			idea = Idea.objects.get(pk = deleteid)
+			if request.user == idea.creator:
+				idea.delete()
+				messages.success(request,"Idea deleted")
+			else:
+				messages.error(request,"You can not delete the idea. You are not the owner.") 
+
 	if request.method == 'GET':
 				
 		return render(request, 'ideas/main.html', {'ideas':ideas, 'filterform':filterlistideas_form})
@@ -162,7 +172,7 @@ def edit_idea(request):
 				old_idea.idea_title=cd['idea_title']
 				old_idea.idea_text=cd['idea_text']
 				old_idea.save()
-				messages.success(request,"Iddea modified")
+				messages.success(request,"Idea modified")
 				return HttpResponseRedirect('/ideas')
 			else: 
 				messages.error(request, "There was an error while editing the idea")

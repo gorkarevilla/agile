@@ -53,6 +53,7 @@ def idea_list(request):
 		
 		return render(request, 'ideas/main.html', {'ideas':ideas, 'filterform':filterlistideas_form})
 
+@login_required(login_url="/ideas/login")
 def show_idea(request):
 	if request.method == 'GET':
 		idea1= request.GET.get('id', '')
@@ -105,10 +106,10 @@ def submit_comment (request):
 			comment = comment_form.save(commit=False)
 			comment.save()
 			messages.add_message(request, messages.SUCCESS, 'You have successfully commented!')
-			return HttpResponseRedirect('/ideas/')
+			return HttpResponseRedirect('/ideas/main')
 		else:
 			messages.error(request, 'Your comment could not be added, it was not valid!')
-			return HttpResponseRedirect('/ideas/')
+			return HttpResponseRedirect('/ideas/main')
 
 
 def user_signup(request): 
@@ -125,6 +126,7 @@ def user_signup(request):
 		user_form = UserRegistrationForm()
 	return render(request,'ideas/signup.html', {'user_form':user_form})
 
+@login_required(login_url="/ideas/login")
 def add_idea (request):
 	if request.method == 'GET':
 		form = IdeaForm()
@@ -141,13 +143,13 @@ def add_idea (request):
 				idea.creator = request.user
 				idea.save()
 				messages.add_message(request, messages.SUCCESS, 'You have sucessfully created an idea!')
-				return HttpResponseRedirect('/ideas/')
+				return HttpResponseRedirect('/ideas/main')
 			else:
 				messages.add_message(request, messages.ERROR, 'Idea with same title already created!')
-				return HttpResponseRedirect('/ideas/')
+				return HttpResponseRedirect('/ideas/main')
 		else:
 			messages.add_message(request, messages.ERROR, 'ERROR EN EL FORULARIO!')
-			return HttpResponseRedirect('/ideas/')
+			return HttpResponseRedirect('/ideas/main')
 	else:
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
@@ -162,7 +164,7 @@ def edit_idea(request):
 			return render(request, 'ideas/editIdea.html', {'form':form})
 		else: 
 			messages.add_message(request, messages.ERROR, 'You can only modify your idea')
-			return HttpResponseRedirect('/ideas/')
+			return HttpResponseRedirect('/ideas/main')
 	elif request.method == 'POST':
 		form = EditIdeaForm(request.POST)
 		if form.is_valid(): 
@@ -173,13 +175,13 @@ def edit_idea(request):
 				old_idea.idea_text=cd['idea_text']
 				old_idea.save()
 				messages.success(request,"Idea modified")
-				return HttpResponseRedirect('/ideas')
+				return HttpResponseRedirect('/ideas/main)')
 			else: 
 				messages.error(request, "There was an error while editing the idea")
-				return HttpResponseRedirect('/ideas')
+				return HttpResponseRedirect('/ideas/main')
 		else: 
 			messages.error(request, "Form invalid")
-			return HttpResponseRedirect('/ideas')
+			return HttpResponseRedirect('/ideas/main')
 
 
 

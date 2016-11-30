@@ -1,27 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<div class="btn-group col-md-12" role="group">
-          <a href="/ideas/comment?id={{idea.pk}}"><label>Comment Idea</label>
-            <i class=" btn fa fa-plus fa-2x" aria-hidden="true"></i>
-          </a><br>
-          <a href="/ideas/editIdea?id={{idea.pk}}"><label>Edit Idea</label>
-	    	<i class=" btn fa fa-pencil-square-o fa-2x" aria-hidden="true"></i>
-	    </a>
+	<div class="btn-group col-md-8" role="group">
+		<a href="/ideas/editIdea?id={{idea.pk}}" class=" btn btn-primary btn-md fa fa-pencil-square-o" aria-hidden="true"><label>Edit Idea</label></a>
+		
 	    {% if idea.creator|stringformat:"s" == user.get_username %}
-			<br><a href="/ideas/main?delete={{idea.pk}}"><label>Delete Idea</label>
-	    		<i class=" btn fa fa-trash fa-2x" aria-hidden="true"></i>
-	    	</a>
+			<a href="/ideas/main?delete={{idea.pk}}" class="btn btn-primary btn-md fa fa-trash" aria-hidden="true" onclick="return confirm('Are you sure to delete the Idea?')"><label>Delete Idea</label></a>
 	    {% endif %}
+	    
 	</div>
+	
+	<div class="col-md-4">
+		<a href="/ideas/comment?id={{idea.pk}}" class=" btn btn-primary btn-md fa fa-plus" aria-hidden="true" ><label>Comment Idea</label></a><br>
+	</div>
+	
+	
 	<div class="col-md-8">
-	    <p><font size="6">{{idea.idea_title}}</font></p>
-	    <p><font size="5">{{idea.idea_text}}</font></p>
+		</br>
+		<table class="table table-bordered">
+  			<thread><tr>
+    			<th>
+    				<h1>Idea: {{idea.idea_title}}</h1>
+    			</th>
+  			</tr></thread>
+  			<tbody><tr>
+    			<td>
+	    			<h2>Description: </h2>
+	    			<p>{{idea.idea_text}}</p>
+	    		</td>
+  			</tr></tbody>
+		</table>
+		
     </div>
-    <div class="col-md-4">
-    	<p><font size="6">Comments</font></p>
+    
+    <div class="col-md-4"> 
+    	<h2>Comments</h2>
     	{% for comment in comments %}
-			<li class="list-group-item">{{ comment.comment}}</li>
+			<li class="list-group-item">{{ comment.comment}} by <b>{{comment.user_name}}</b></li>
 		{% endfor %}
     </div>
 {% endblock %}

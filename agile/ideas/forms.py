@@ -40,12 +40,12 @@ class IdeaForm(forms.ModelForm):
 		fields = ('idea_title', 'idea_text')
 
 class EditIdeaForm(forms.Form):
-	idea_title = forms.CharField(label='Title')
-	idea_text = forms.CharField(label='Text')
+	idea_title = forms.CharField(label='Title', widget=forms.TextInput(attrs={'placeholder':'Length 3-50 char.'}))
+	idea_text = forms.CharField(label='Text', widget=forms.Textarea)
 	
 	class Meta:
 		model = Idea
 		widgets = {'idea_id': forms.HiddenInput()}
 		
 class FilterIdeasForm(forms.Form):
-	keywordfilter_text = forms.CharField(label='Search by Title', max_length=50, required=False)
+	keywordfilter_text = forms.CharField(label='Search by Title', max_length=50, required=False, widget=forms.TextInput(attrs={'placeholder':'No filter applied'}))

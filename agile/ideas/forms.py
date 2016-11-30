@@ -35,16 +35,14 @@ class CommentForm(forms.ModelForm):
 class IdeaForm(forms.ModelForm):
 	idea_title = forms.CharField(label='Idea title', widget=forms.TextInput(attrs={'placeholder':'Length 3-50 char.'}))
 	idea_text = forms.CharField(label='Idea text', widget=forms.Textarea)
-	sell_price = forms.IntegerField(label='Sell price', required=False, widget=forms.TextInput(attrs={'placeholder':'Optional'}))
 	class Meta:
 		model = Idea
-		fields = ('idea_title', 'idea_text', 'sell_price')
+		fields = ('idea_title', 'idea_text')
 
 class EditIdeaForm(forms.Form):
 	idea_title = forms.CharField(label='Title')
 	idea_text = forms.CharField(label='Text')
-	sell_price = forms.IntegerField(label='Sell price', required=False, widget=forms.TextInput(attrs={'placeholder':'Optional'}))
-	idea_id = forms.IntegerField(widget = forms.HiddenInput())
+	
 	class Meta:
 		model = Idea
 		widgets = {'idea_id': forms.HiddenInput()}

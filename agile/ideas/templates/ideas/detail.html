@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<div class="btn-group col-md-8" role="group">
-		<a href="/ideas/editIdea?id={{idea.pk}}" class=" btn btn-primary btn-md fa fa-pencil-square-o" aria-hidden="true"><label>Edit Idea</label></a>
-		
+	<div class="btn-group col-md-8" role="group">		
 	    {% if idea.creator|stringformat:"s" == user.get_username %}
+	    	<a href="/ideas/editIdea?id={{idea.pk}}" class=" btn btn-primary btn-md fa fa-pencil-square-o" aria-hidden="true"><label>Edit Idea</label></a>
 			<a href="/ideas/main?delete={{idea.pk}}" class="btn btn-primary btn-md fa fa-trash" aria-hidden="true" onclick="return confirm('Are you sure to delete the Idea?')"><label>Delete Idea</label></a>
 	    {% endif %}
 	    

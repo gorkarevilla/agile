@@ -9,6 +9,7 @@
 	    {% if idea.creator|stringformat:"s" == user.get_username or user.is_superuser %}
 	    	<a href="/ideas/editIdea?id={{idea.pk}}" class=" btn btn-primary btn-md fa fa-pencil-square-o" aria-hidden="true"><label>Edit Idea</label></a>
 		<a href="/ideas/main?delete={{idea.pk}}" class="btn btn-primary btn-md fa fa-trash" aria-hidden="true" onclick="return confirm('Are you sure to delete the Idea?')"><label>Delete Idea</label></a>
+		{%endif%}
 	    {% if idea.sell_price != None %}
 			<br><a href="/ideas/main?buy={{idea.pk}}"><label>Buy Idea</label>
 	    		<i aria-hidden="true"></i>

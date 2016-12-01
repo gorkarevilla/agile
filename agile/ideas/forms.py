@@ -27,6 +27,7 @@ class UserRegistrationForm(forms.ModelForm):
 		return cd['password_2']
 
 class CommentForm(forms.ModelForm):
+	id=forms.IntegerField(label='id', widget=forms.HiddenInput(), required=False)
 	class Meta:
 		model = Comment
 		fields = ('comment', 'idea_id', 'user_name')
@@ -47,13 +48,5 @@ class EditIdeaForm(forms.Form):
 		model = Idea
 		widgets = {'idea_id': forms.HiddenInput()}
 
-class DeleteCommentForm(forms.Form):	
-	comment = forms.CharField(label='comment')	
-	
-	class Meta:
-		model = Comment
-		fields = ('comment')
-		widgets = {'idea_id': forms.HiddenInput(), 'user_name': forms.HiddenInput()}
-		
 class FilterIdeasForm(forms.Form):
 	keywordfilter_text = forms.CharField(label='Search by Title', max_length=50, required=False)

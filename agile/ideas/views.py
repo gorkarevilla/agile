@@ -189,31 +189,36 @@ def edit_idea(request):
 @login_required
 def deleteComment(request):
 	if request.method == 'GET':
-		id = request.GET.get('id')	
-		my_comment = Idea.objects.get(pk=id)
-		#user = request.user	
+		id1 = request.GET.get('id')	
+		my_comment = Comment.objects.get(pk=id1)
+		user = request.user	
 		if (request.user.is_superuser):
-			#form = CommentForm(initial={'idea_id':id, 'user_name':request.user})
-			form = CommentForm(initial={'comment':my_comment.comment})	
+			#form = CommentForm(initial={'comment':my_comment.comment})	
+			
+			form = CommentForm(initial={'comment':my_comment.comment, 'id':id1, 'idea_id':my_comment.idea_id, 'user_name':my_comment.user_name})
 			return render(request, 'ideas/deleteComment.html', {'form':form})
 		else: 
 			messages.add_message(request, messages.ERROR, 'You can not delete the comment. You are not the superuser')
 			return HttpResponseRedirect('/ideas/')	
-	if request.method == 'POST':			 		
+	if request.method == 'POST':
 		form = CommentForm(request.POST)
-
 		if form.is_valid():
-			cd = form.cleaned_data
-			comment = form.delete(commit=False)			
-			#comment_form = Idea.objects.get(pk=1)	
-			#if (comment_form is not None):
-			#comment_form.comment=cd['comment']			
-			comment.delete()
-			messages.add_message(request, "You have deleted the comment")
-			return HttpResponseRedirect('/ideas/')
-		else:
-			messages.error(request, 'you can not delete')
-			return HttpResponseRedirect('/ideas/')
+			cd = form.cleaned_data			 		
+			comment = Comment.objects.get(pk=cd['id'])
+		
+
+			if form.is_valid():
+				#cd = form.cleaned_data
+				#comment = form.delete(commit=False)			
+				#comment_form = Idea.objects.get(pk=1)	
+				#if (comment_form is not None):
+				#comment_form.comment=cd['comment']			
+				comment.delete()
+				messages.add_message(request, "You have deleted the comment")
+				return HttpResponseRedirect('/ideas/')
+			else:
+				messages.error(request, 'you can not delete')
+				return HttpResponseRedirect('/ideas/')
 
 
 @login_required()

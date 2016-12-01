@@ -13,6 +13,14 @@
 	    		<i class=" btn fa fa-trash fa-2x" aria-hidden="true"></i>
 	    	</a>
 	    {% endif %}
+
+
+	    {% if idea.creator|stringformat:"s" == user.is_superuser %}
+			<br><a href="/ideas/main?delete={{idea.pk}}"><label>Delete Idea</label>
+	    		<i class=" btn fa fa-trash fa-2x" aria-hidden="true"></i>
+	    	</a>
+	    {% endif %}
+
 	</div>
 	<div class="col-md-8">
 	    <p><font size="6">{{idea.idea_title}}</font></p>
@@ -21,7 +29,7 @@
     <div class="col-md-4">
     	<p><font size="6">Comments</font></p>
     	{% for comment in comments %}
-			<li class="list-group-item">{{ comment.comment}}</b><a class="pull-right" href="/ideas/detail?id={{comment.id}}">See idea</a></li>
+			<li class="list-group-item">{{ comment.comment}}</b><a class="pull-right" href="/ideas/deleteComment?id={{comment.id}}">See comment</a></li>
 		{% endfor %}
     </div>
 {% endblock %}

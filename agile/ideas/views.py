@@ -33,7 +33,7 @@ def idea_list(request):
 		deleteid = request.GET['delete']
 		if deleteid is not None and deleteid !='':
 			idea = Idea.objects.get(pk = deleteid)
-			if request.user == idea.creator:
+			if request.user == idea.creator or request.user.is_superuser:
 				idea.delete()
 				messages.success(request,"Idea deleted")
 			else:

@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<div class="btn-group col-md-8" role="group">		
+	<div class="btn-group" role="group">
+	<hr>		
 	    {% if idea.creator|stringformat:"s" == user.get_username or user.is_superuser %}
 	    	<a href="/ideas/editIdea?id={{idea.pk}}" class=" btn btn-primary btn-md fa fa-pencil-square-o" aria-hidden="true"><label>Edit Idea</label></a>
 			<a href="/ideas/main?delete={{idea.pk}}" class="btn btn-primary btn-md fa fa-trash" aria-hidden="true" onclick="return confirm('Are you sure to delete the Idea?')"><label>Delete Idea</label></a>
@@ -9,14 +10,9 @@
 	    
 	</div>
 	<hr>
-	<div class="col-md-4">
-		<a href="/ideas/comment?id={{idea.pk}}" class=" btn btn-primary btn-md fa fa-plus" aria-hidden="true" ><label>Comment Idea</label></a><br>
-	</div>
-	    
-	</div>
 
-          <div class="btn-group col-md-8" role="group">
-	<div class="panel panel-primary col-md-8">
+	    
+	<div class="panel panel-primary">
 	    <!-- Default panel contents -->
 	    <div class="panel-heading">{{idea.idea_title}}</div>
 	      <div class="panel-body">
@@ -37,11 +33,15 @@
 	  </div>		
 	    
 
-	   
-    <div class="col-md-4">
-    	<p><font size="6">Comments</font></p>
-    	{% for comment in comments %}
+	<div class="btn-group" role="group">
+		<a href="/ideas/comment?id={{idea.pk}}" class=" btn btn-primary btn-md fa fa-plus" aria-hidden="true" ><label>Comment Idea</label></a><br>
+	</div>
+	<h4> Comments: </h4>
+	<ul class="list-group">
+		{% for comment in comments %}
 			<li class="list-group-item">{{ comment.comment}} by <b>{{comment.user_name}}</b></li>
 		{% endfor %}
+	</ul>
+    	
     </div>
 {% endblock %}

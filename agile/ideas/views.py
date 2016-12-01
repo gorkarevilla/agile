@@ -186,4 +186,65 @@ def edit_idea(request):
 
 # form = EditIdeaForm(request.POST or None, initial={'idea_title':instance.idea_title, 'idea_text':instance.idea_text})
 
+@login_required
+def deleteComment(request):
+	if request.method == 'GET':
+		id = request.GET.get('id')	
+		my_comment = Idea.objects.get(pk=id)
+		#user = request.user	
+		if (request.user.is_superuser):
+			#form = CommentForm(initial={'idea_id':id, 'user_name':request.user})
+			form = CommentForm(initial={'comment':my_comment.comment})	
+			return render(request, 'ideas/deleteComment.html', {'form':form})
+		else: 
+			messages.add_message(request, messages.ERROR, 'You can not delete the comment. You are not the superuser')
+			return HttpResponseRedirect('/ideas/')	
+	if request.method == 'POST':			 		
+		form = CommentForm(request.POST)
+
+		if form.is_valid():
+			cd = form.cleaned_data
+			comment = form.delete(commit=False)			
+			#comment_form = Idea.objects.get(pk=1)	
+			#if (comment_form is not None):
+			#comment_form.comment=cd['comment']			
+			comment.delete()
+			messages.add_message(request, "You have deleted the comment")
+			return HttpResponseRedirect('/ideas/')
+		else:
+			messages.error(request, 'you can not delete')
+			return HttpResponseRedirect('/ideas/')
+
+
+@login_required()
+def deleteIdea(request):
+	filterlistideas_form = FilterIdeasForm(request.POST or None)
+	ideas=Idea.objects.all()
+		
+	filter = request.POST.get('keywordfilter_text',False)
+
+	if request.method == 'GET' and 'delete' in request.GET:
+		deleteid = request.GET['delete']
+		if deleteid is not None and deleteid !='':
+			idea = Idea.objects.get(pk = deleteid)
+			if (request.user.is_superuser):
+				idea.delete()
+				messages.success(request,"Idea deleted")
+			else:
+				messages.error(request,"You can not delete any idea. You are not superuser.") 
+
+	if request.method == 'GET':
+				
+		return render(request, 'ideas/main.html', {'ideas':ideas, 'filterform':filterlistideas_form})
+	
+	if request.method == 'POST':
+
+		if filterlistideas_form.is_valid():
+			if filter=='':
+				ideas=Idea.objects.all()
+			else:
+				ideas=Idea.objects.all().filter(idea_title__icontains=filter)		
+		
+		return render(request, 'ideas/main.html', {'ideas':ideas, 'filterform':filterlistideas_form})
+
 

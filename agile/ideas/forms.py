@@ -46,6 +46,14 @@ class EditIdeaForm(forms.Form):
 	class Meta:
 		model = Idea
 		widgets = {'idea_id': forms.HiddenInput()}
+
+class DeleteCommentForm(forms.Form):	
+	comment = forms.CharField(label='comment')	
+	
+	class Meta:
+		model = Comment
+		fields = ('comment')
+		widgets = {'idea_id': forms.HiddenInput(), 'user_name': forms.HiddenInput()}
 		
 class FilterIdeasForm(forms.Form):
 	keywordfilter_text = forms.CharField(label='Search by Title', max_length=50, required=False)

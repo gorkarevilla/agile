@@ -21,7 +21,7 @@
     <div class="col-md-4">
     	<p><font size="6">Comments</font></p>
     	{% for comment in comments %}
-			<li class="list-group-item">{{ comment.comment}}</li>
+			<li class="list-group-item">{{ comment.comment}}</b><a class="pull-right" href="/ideas/detail?id={{comment.id}}">See idea</a></li>
 		{% endfor %}
     </div>
 {% endblock %}

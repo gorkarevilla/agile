@@ -12,4 +12,7 @@ urlpatterns = [
     url(r'^editIdea', views.edit_idea, name='editIdea'),
     url(r'^main', views.idea_list, name='main'),
     url(r'^detail', views.show_idea, name='show_idea'),
+    url(r'^deleteIdea', views.deleteIdea, name='deleteIdea'),
+    url(r'^deleteComment', views.deleteComment, name='deleteComment'),
+	
 ]

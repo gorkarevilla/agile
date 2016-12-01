@@ -153,7 +153,6 @@ def add_idea (request):
 				idea.idea_title = title
 				idea.idea_text = ideat
 				idea.creator = request.user
-				idea.owner = request.user
 				idea.save()
 				messages.add_message(request, messages.SUCCESS, 'You have sucessfully created an idea!')
 				return HttpResponseRedirect('/ideas/')

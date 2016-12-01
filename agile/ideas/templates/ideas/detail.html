@@ -8,7 +8,7 @@
           <a href="/ideas/editIdea?id={{idea.pk}}"><label>Edit Idea</label>
 	    	<i class=" btn fa fa-pencil-square-o fa-2x" aria-hidden="true"></i>
 	    </a>
-	    {% if idea.creator|stringformat:"s" == user.get_username %}
+ {% if idea.creator|stringformat:"s" == user.get_username %}
 			<br><a href="/ideas/main?delete={{idea.pk}}"><label>Delete Idea</label>
 	    		<i class=" btn fa fa-trash fa-2x" aria-hidden="true"></i>
 	    	</a>
@@ -19,10 +19,26 @@
 	    	</a>
 	    {% endif %}
 	</div>
-	<div class="col-md-8">
-	    <p><font size="6">{{idea.idea_title}}</font></p>
-	    <p><font size="5">{{idea.idea_text}}</font></p>
-    </div>
+	<div class="panel panel-primary col-md-8">
+	    <!-- Default panel contents -->
+	    <div class="panel-heading">{{idea.idea_title}}</div>
+	      <div class="panel-body">
+		<h4>Description:</h4>
+		<p>{{ idea.idea_text }}</p>
+		<hr class="m-y-2">
+		<h4>Buy now price:</h4>
+		{% if idea.sell_price != None and idea.owner == None %}
+		<p>{{ idea.sell_price }}</p>
+		{%elif idea.owner != None %}
+		<p> This idea has been bought by {{ idea.owner }}</p>
+		{% else %}
+		<p>This idea is not for sell</p>
+		{%endif%}
+		<hr class="m-y-2">		
+	      </div>
+	    </div>
+	  </div>
+	   
     <div class="col-md-4">
     	<p><font size="6">Comments</font></p>
     	{% for comment in comments %}

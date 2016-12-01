@@ -14,6 +14,7 @@ class Idea(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='idea_creator')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='idea_owner', null=True, default=None)
 
+
 # Comment Ideas Model
 class Comment(models.Model):
     idea_id = models.ForeignKey(Idea, on_delete=models.CASCADE)

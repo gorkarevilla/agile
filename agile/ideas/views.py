@@ -38,17 +38,6 @@ def idea_list(request):
 				messages.success(request,"Idea deleted")
 			else:
 				messages.error(request,"You can not delete the idea. You are not the owner.") 
-	if request.method == 'GET' and 'buy' in request.GET:
-		buyid = request.GET['buy']
-		if buyid is not None and buyid !='':
-			idea = Idea.objects.get(pk = buyid)
-			if request.user != idea.owner:
-				idea.owner=request.user
-				idea.sell_price = None
-				idea.save()
-				messages.success(request,"Idea buyed")
-			else:
-				messages.error(request,"You can not buy the idea. You are already the owner.") 
 
 	if request.method == 'GET':
 				
@@ -64,6 +53,7 @@ def idea_list(request):
 		
 		return render(request, 'ideas/main.html', {'ideas':ideas, 'filterform':filterlistideas_form})
 
+@login_required(login_url="/ideas/login")
 def show_idea(request):
 	if request.method == 'GET':
 		idea1= request.GET.get('id', '')
@@ -116,10 +106,10 @@ def submit_comment (request):
 			comment = comment_form.save(commit=False)
 			comment.save()
 			messages.add_message(request, messages.SUCCESS, 'You have successfully commented!')
-			return HttpResponseRedirect('/ideas/')
+			return HttpResponseRedirect('/ideas/main')
 		else:
 			messages.error(request, 'Your comment could not be added, it was not valid!')
-			return HttpResponseRedirect('/ideas/')
+			return HttpResponseRedirect('/ideas/main')
 
 
 def user_signup(request): 
@@ -136,6 +126,7 @@ def user_signup(request):
 		user_form = UserRegistrationForm()
 	return render(request,'ideas/signup.html', {'user_form':user_form})
 
+@login_required(login_url="/ideas/login")
 def add_idea (request):
 	if request.method == 'GET':
 		form = IdeaForm()
@@ -145,23 +136,20 @@ def add_idea (request):
 		if idea_form.is_valid():
 			title = idea_form.cleaned_data['idea_title']
 			ideat = idea_form.cleaned_data['idea_text']
-			sell_pricew = idea_form.cleaned_data['sell_price']
 			if Idea.objects.filter(idea_title=title).count() == 0:
 				idea = idea_form.save(commit=False)
-				if sell_pricew != None:
-					idea.sell_price =sell_pricew
 				idea.idea_title = title
 				idea.idea_text = ideat
 				idea.creator = request.user
 				idea.save()
 				messages.add_message(request, messages.SUCCESS, 'You have sucessfully created an idea!')
-				return HttpResponseRedirect('/ideas/')
+				return HttpResponseRedirect('/ideas/main')
 			else:
 				messages.add_message(request, messages.ERROR, 'Idea with same title already created!')
-				return HttpResponseRedirect('/ideas/')
+				return HttpResponseRedirect('/ideas/main')
 		else:
 			messages.add_message(request, messages.ERROR, 'ERROR EN EL FORULARIO!')
-			return HttpResponseRedirect('/ideas/')
+			return HttpResponseRedirect('/ideas/main')
 	else:
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
@@ -172,29 +160,28 @@ def edit_idea(request):
 		my_idea = Idea.objects.get(pk=id)
 		user = request.user
 		if (my_idea.creator == user) or (request.user.is_superuser):
-			form = EditIdeaForm(initial={'idea_title':my_idea.idea_title, 'idea_text':my_idea.idea_text, 'sell_price':my_idea.sell_price, 'idea_id':id})
+			form = EditIdeaForm(initial={'idea_title':my_idea.idea_title, 'idea_text':my_idea.idea_text})
 			return render(request, 'ideas/editIdea.html', {'form':form})
 		else: 
 			messages.add_message(request, messages.ERROR, 'You can only modify your idea')
-			return HttpResponseRedirect('/ideas/')
+			return HttpResponseRedirect('/ideas/main')
 	elif request.method == 'POST':
 		form = EditIdeaForm(request.POST)
 		if form.is_valid(): 
 			cd = form.cleaned_data
-			old_idea = Idea.objects.get(pk=cd['idea_id'])
+			old_idea = Idea.objects.get(pk=1)
 			if (old_idea is not None): 
 				old_idea.idea_title=cd['idea_title']
 				old_idea.idea_text=cd['idea_text']
-				old_idea.sell_price=cd['sell_price']
 				old_idea.save()
 				messages.success(request,"Idea modified")
-				return HttpResponseRedirect('/ideas')
+				return HttpResponseRedirect('/ideas/main)')
 			else: 
 				messages.error(request, "There was an error while editing the idea")
-				return HttpResponseRedirect('/ideas')
+				return HttpResponseRedirect('/ideas/main')
 		else: 
 			messages.error(request, "Form invalid")
-			return HttpResponseRedirect('/ideas')
+			return HttpResponseRedirect('/ideas/main')
 
 
 

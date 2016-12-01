@@ -7,26 +7,24 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-    	    <label>Add new idea
-             <div class="btn-group" role="group" id="plus-btn">
-                 <a href="/ideas/addIdea">
-                    <i class=" btn fa fa-plus fa-2x" aria-hidden="true"></i>
-                 </a>
-            </div>
-             </label>
-        </div>
-    </div>
+			<a href="/ideas/addIdea" class="btn btn-primary btn-md fa fa-plus-square-o" aria-hidden="true">
+                 <label>Add new idea</label></a>
+		
+		
+			<form class="pull-right" action="main" method="post" enctype="application/x-www-form-urlencoded">
+				{% csrf_token %}
+				{{ filterform }}
+				<button class="btn btn-primary btn-md fa fa-search" type="submit" >Search</button>
+			</form>
+		</div>
+	</div>
+</div>
 
-<form action="main" method="post" enctype="application/x-www-form-urlencoded">
-	{% csrf_token %}
-	{{ filterform }}
-	<button class="btn btn-primary btn-sm" type="submit">Search</button>
-</form>
+
 
 <ul class="list-group">
 	{% for idea in ideas %}
-		<li class="list-group-item">{{ idea.idea_title}} by <b>{{ idea.creator}}</b>	owner: <b>{{ idea.owner}}	</b>
-		{% if idea.sell_price != None %} <b> BUYABE</b> {% endif %}<a class="pull-right" href="/ideas/detail?id={{idea.id}}">See idea</a></li>
+		<li class="list-group-item">{{ idea.idea_title}} by <b>{{ idea.creator}}</b><a class="pull-right btn btn-primary btn-md fa fa-search-plus" href="/ideas/detail?id={{idea.id}}">See idea</a></li>
 	{% endfor %}
 </ul>
 
